@@ -2,6 +2,7 @@ import 'dotenv/config';
 import app from 'app.js';
 import { Server } from 'http';
 import mongoose from 'mongoose';
+import connectDB from './config/database.js';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const NODE_ENV = process.env.NODE_ENV;
@@ -17,6 +18,8 @@ async function startServer() {
     if (!process.env.SESSION_SECRET) {
       throw new Error('Missing SESSION_SECRET in .env');
     }
+
+    await connectDB();
     
     server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
