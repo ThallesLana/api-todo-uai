@@ -22,7 +22,7 @@ router.get('/google/callback', passport.authenticate(
     failureRedirect: '/login-failure',
   }),
   (_req, res) => {
-    res.redirect('/users/hello-new-user');
+    res.redirect('/api/users/hello-new-user');
   }
 )
 
