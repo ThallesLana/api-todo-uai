@@ -45,7 +45,7 @@ app.get('/health', (_req, res) => {
   });
 });
 
-app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
+app.use('api/users', userRoutes);
+app.use('api/auth', authRoutes);
 
 export default app;
