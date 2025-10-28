@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import app from 'app.js';
+import app from './app.js';
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import connectDB from './config/database.js';
