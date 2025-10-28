@@ -1,3 +1,4 @@
+import { apiResponse } from "@/responses/apiResponse.js";
 import type { NextFunction, Request, Response } from "express";
 
 export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
@@ -5,9 +6,5 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     return next();
   }
 
-  res.status(401).json({
-    status: 401,
-    error: 'unauthorized',
-    message: 'Authentication required.',
-  });
+  apiResponse.unauthorized(res, 'Authentication required.');
 }
