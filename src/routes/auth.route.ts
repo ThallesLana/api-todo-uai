@@ -1,7 +1,15 @@
 import { Router } from "express";
 import passport from "@/config/passport.js";
+import { apiResponse } from "@/responses/apiResponse.js";
 
 const router = Router();
+
+router.get('/', (_req, res) => {
+  apiResponse.success(res, {
+    service: 'Auth',
+    status: 'online'
+  });
+});
 
 router.get('/google', passport.authenticate(
   'google', {
@@ -19,23 +27,16 @@ router.get('/google/callback', passport.authenticate(
 )
 
 router.get('/login-failure', (_req, res) => {
-   res.status(401).json({
-    error: 'Not authorized',
-    message: 'Sorry, but there was an error during authentication. Please try again.',
-  });
+  apiResponse.unauthorized(res, 'Sorry, but there was an error during authentication. Please try again.');
 });
 
 router.get('/logout', (req, res) => {
   req.logout((err) => {
     if(err) {
-      res.status(500).json({ 
-        error: 'Server error',
-        message: 'Sorry, but there was an error during logout. Message error: ' + err.message,
-      });
+      apiResponse.serverError(res, 'Sorry, but there was an error during logout. Message error: ' + err);
     }
-    res.json({
-      message: 'Logout successful'
-    })
+
+    apiResponse.success(res, null, 'Logout successful');
   })
 
 });
