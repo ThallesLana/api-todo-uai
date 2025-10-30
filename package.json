@@ -8,8 +8,8 @@
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsup src/server.ts --format esm --out-dir dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -23,14 +23,23 @@
   },
   "author": "Thalles Lana",
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
     "@types/node": "^24.9.1",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
   }
 }

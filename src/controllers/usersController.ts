@@ -1,6 +1,6 @@
-import { apiResponse } from "@/responses/apiResponse.js";
-import { UsersService } from "@/services/usersService.js";
-import { Request, Response } from "express";
+import { apiResponse } from '@/responses/apiResponse.js';
+import { UsersService } from '@/services/usersService.js';
+import { Request, Response } from 'express';
 
 export class UsersController {
   private usersService: UsersService;
@@ -13,7 +13,7 @@ export class UsersController {
     try {
       const users = await this.usersService.getAll();
       return apiResponse.success(res, users);
-    } catch(err) {
+    } catch (err) {
       return apiResponse.error(res, 'Error on get users: ' + err);
     }
   }
@@ -22,14 +22,14 @@ export class UsersController {
     try {
       const { id } = req.params;
 
-      if(!id) {
+      if (!id) {
         return apiResponse.error(res, 'Id is required');
       }
 
       const user = await this.usersService.getOne(id);
 
       return apiResponse.success(res, user);
-    } catch(err) {
+    } catch (err) {
       return apiResponse.error(res, 'Error on get user: ' + err);
     }
   }
@@ -39,13 +39,13 @@ export class UsersController {
       const { id } = req.params;
       const { name } = req.body;
 
-      if(!id) {
+      if (!id) {
         return apiResponse.error(res, 'Id is required');
       }
 
       const updateData: { name?: string } = {};
 
-      if(name) {
+      if (name) {
         updateData.name = name;
       }
 
@@ -65,7 +65,7 @@ export class UsersController {
     try {
       const { id } = req.params;
 
-      if(!id) {
+      if (!id) {
         return apiResponse.error(res, 'Id is required');
       }
 

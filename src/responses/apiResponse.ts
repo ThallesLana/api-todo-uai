@@ -20,9 +20,8 @@ export const HttpStatus = {
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
-  SERVICE_UNAVAILABLE: 503
+  SERVICE_UNAVAILABLE: 503,
 } as const;
-
 
 export const apiResponse = {
   success: <T>(res: Response, data: T, message?: string, statusCode = HttpStatus.OK) => {
@@ -30,16 +29,21 @@ export const apiResponse = {
       success: true,
       statusCode: statusCode,
       data,
-      ...(message && { message })
+      ...(message && { message }),
     } as ApiResponse<T>);
   },
 
-  error: (res: Response, message: string, statusCode = HttpStatus.BAD_REQUEST, errors?: unknown[]) => {
+  error: (
+    res: Response,
+    message: string,
+    statusCode = HttpStatus.BAD_REQUEST,
+    errors?: unknown[],
+  ) => {
     return res.status(statusCode).json({
       success: false,
       statusCode: statusCode,
       error: message,
-      ...(errors && { errors })
+      ...(errors && { errors }),
     } as ApiResponse);
   },
 
@@ -48,7 +52,7 @@ export const apiResponse = {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       success: false,
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      error: 'Server error'
+      error: 'Server error',
     } as ApiResponse);
   },
 
@@ -56,7 +60,7 @@ export const apiResponse = {
     return res.status(HttpStatus.NOT_FOUND).json({
       success: false,
       statusCode: HttpStatus.NOT_FOUND,
-      error: `${resource} não encontrado`
+      error: `${resource} não encontrado`,
     } as ApiResponse);
   },
 
@@ -64,7 +68,7 @@ export const apiResponse = {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       success: false,
       statusCode: HttpStatus.UNAUTHORIZED,
-      error: message
+      error: message,
     } as ApiResponse);
   },
 
@@ -72,7 +76,7 @@ export const apiResponse = {
     return res.status(HttpStatus.FORBIDDEN).json({
       success: false,
       statusCode: HttpStatus.FORBIDDEN,
-      error: message
+      error: message,
     } as ApiResponse);
-  }
+  },
 };

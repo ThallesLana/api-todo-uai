@@ -1,5 +1,5 @@
-import User, { IUser } from "@/models/user.js";
-import mongoose from "mongoose";
+import User, { IUser } from '@/models/user.js';
+import mongoose from 'mongoose';
 
 export class UsersService {
   private userModel: mongoose.Model<IUser>;
@@ -15,7 +15,7 @@ export class UsersService {
   async getOne(id: string) {
     const user = await this.userModel.findById(id).select('-__v');
 
-    if(!user) {
+    if (!user) {
       throw new Error('User not found');
     }
 
@@ -23,9 +23,11 @@ export class UsersService {
   }
 
   async update(id: string, updateData: Partial<IUser>) {
-    const user = await this.userModel.findByIdAndUpdate(id, updateData, {
-      new: true
-    }).select('-__v');
+    const user = await this.userModel
+      .findByIdAndUpdate(id, updateData, {
+        new: true,
+      })
+      .select('-__v');
 
     if (!user) {
       throw new Error('User not found');
@@ -37,7 +39,7 @@ export class UsersService {
   async delete(id: string) {
     const user = await this.userModel.findByIdAndDelete(id);
 
-    if(!user) {
+    if (!user) {
       throw new Error('User not found');
     }
   }

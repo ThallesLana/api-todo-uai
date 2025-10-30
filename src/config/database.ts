@@ -1,19 +1,18 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 async function connectDB() {
   try {
     const mongoURI = process.env.MONGODB_URI;
-    
-    if(!mongoURI) throw new Error('MONGODB_URI is not defined in .env file.');
+
+    if (!mongoURI) throw new Error('MONGODB_URI is not defined in .env file.');
 
     await mongoose.connect(mongoURI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       maxPoolSize: 20,
-      
     });
     console.log('✅ MongoDB connected!');
-  } catch(err) {
+  } catch (err) {
     console.error('MongoDB connection error:', err);
     process.exit(1);
   }
