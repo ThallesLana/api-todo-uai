@@ -1,14 +1,17 @@
+import { ListColor } from '@/models/tasklist.js';
 import { z } from 'zod';
 
 export const createTasklistSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   description: z.string().min(3, 'Description must be at least 3 characters long').optional(),
+  color: z.enum(Object.values(ListColor)).optional(),
   userId: z.string().min(1, 'User id is required'),
 });
 
 export const updateTasklistSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long').optional(),
   description: z.string().min(3, 'Description must be at least 3 characters long').optional(),
+  color: z.enum(Object.values(ListColor)).optional(),
 });
 
 export const tasklistIdSchema = z.object({
