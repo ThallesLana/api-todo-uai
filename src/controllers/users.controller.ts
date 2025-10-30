@@ -37,23 +37,12 @@ export class UsersController {
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name } = req.body;
 
       if (!id) {
         return apiResponse.error(res, 'Id is required');
       }
 
-      const updateData: { name?: string } = {};
-
-      if (name) {
-        updateData.name = name;
-      }
-
-      if (Object.keys(updateData).length === 0) {
-        return apiResponse.error(res, 'No fields to update provided');
-      }
-
-      const user = await this.usersService.update(id, updateData);
+      const user = await this.usersService.update(id, req.body);
 
       return apiResponse.success(res, user);
     } catch (err) {
