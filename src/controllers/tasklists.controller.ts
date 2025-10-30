@@ -41,29 +41,7 @@ export class TasklistController {
 
   async create(req: Request, res: Response) {
     try {
-      const { name, description, userId } = req.body;
-
-      if (!name) {
-        return apiResponse.error(res, 'Name is required');
-      }
-
-      if (name.length < 3) {
-        return apiResponse.error(res, 'Name must be at least 3 characters long');
-      }
-
-      if (description && description.length < 3) {
-        return apiResponse.error(res, 'Description must be at least 3 characters long');
-      }
-
-      if (!userId) {
-        return apiResponse.error(res, 'User id is required');
-      }
-
-      const tasklist = await this.tasklistService.create({
-        name,
-        description,
-        userId,
-      });
+      const tasklist = await this.tasklistService.create(req.body);
 
       return apiResponse.success(res, tasklist);
     } catch (err) {
@@ -74,35 +52,12 @@ export class TasklistController {
   async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, description } = req.body;
 
       if (!id) {
         return apiResponse.error(res, 'Id is required');
       }
 
-      const updateData: { name?: string; description?: string } = {};
-
-      if (name) {
-        if (name.length < 3) {
-          return apiResponse.error(res, 'Name must be at least 3 characters long');
-        }
-
-        updateData.name = name;
-      }
-
-      if (description) {
-        if (description.length < 3) {
-          return apiResponse.error(res, 'Description must be at least 3 characters long');
-        }
-
-        updateData.description = description;
-      }
-
-      if (Object.keys(updateData).length === 0) {
-        return apiResponse.error(res, 'No fields to update provided');
-      }
-
-      const tasklist = await this.tasklistService.update(id, updateData);
+      const tasklist = await this.tasklistService.update(id, req.body);
 
       return apiResponse.success(res, tasklist);
     } catch (err) {
