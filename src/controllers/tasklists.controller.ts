@@ -1,5 +1,5 @@
 import { apiResponse } from '@/responses/apiResponse.js';
-import { TasklistService } from '@/services/tasklistService.js';
+import { TasklistService } from '@/services/tasklists.service.js';
 import { Request, Response } from 'express';
 
 export class TasklistController {

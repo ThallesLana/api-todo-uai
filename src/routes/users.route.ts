@@ -1,4 +1,4 @@
-import { UsersController } from '@/controllers/usersController.js';
+import { UsersController } from '@/controllers/users.controller.js';
 import { isAdmin, isAuthenticated } from '@/middlewares/auth.middleware.js';
 import { Router } from 'express';
 

@@ -1,5 +1,5 @@
 import { apiResponse } from '@/responses/apiResponse.js';
-import { UsersService } from '@/services/usersService.js';
+import { UsersService } from '@/services/users.service.js';
 import { Request, Response } from 'express';
 
 export class UsersController {

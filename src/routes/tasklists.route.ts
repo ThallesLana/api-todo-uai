@@ -1,4 +1,4 @@
-import { TasklistController } from '@/controllers/tasklistController.js';
+import { TasklistController } from '@/controllers/tasklists.controller.js';
 import { isAuthenticated } from '@/middlewares/auth.middleware.js';
 import { validate } from '@/middlewares/validate.middleware.js';
 import {
@@ -6,7 +6,7 @@ import {
   tasklistIdSchema,
   updateTasklistSchema,
   userIdSchema,
-} from '@/schemas/tasklist.schema.js';
+} from '@/schemas/tasklists.schema.js';
 import { Router } from 'express';
 
 const route = Router();
