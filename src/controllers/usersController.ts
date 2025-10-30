@@ -69,9 +69,9 @@ export class UsersController {
         return apiResponse.error(res, 'Id is required');
       }
 
-      const user = await this.usersService.delete(id);
+      await this.usersService.delete(id);
 
-      return apiResponse.success(res, user);
+      return apiResponse.success(res, 'User deleted successfully');
     } catch (err) {
       return apiResponse.error(res, 'Error on delete user: ' + err);
     }
