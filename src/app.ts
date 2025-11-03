@@ -7,6 +7,8 @@ import session from 'express-session';
 import passport from '@/config/passport.js';
 import tasklistsRoutes from '@/routes/tasklists.route.js';
 import tasksRoutes from '@/routes/tasks.route.js';
+import { specs } from './config/swagger.js';
+import swaggerUi from 'swagger-ui-express';
 
 const app: Application = express();
 
@@ -32,6 +34,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get('/', (_req, res) => {
   res.json({
