@@ -6,6 +6,7 @@ import authRoutes from '@/routes/auth.route.js';
 import session from 'express-session';
 import passport from '@/config/passport.js';
 import tasklistsRoutes from '@/routes/tasklists.route.js';
+import tasksRoutes from '@/routes/tasks.route.js';
 
 const app: Application = express();
 
@@ -51,5 +52,6 @@ app.get('/health', (_req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/tasklist', tasklistsRoutes);
+app.use('/api/tasks', tasksRoutes);
 
 export default app;
