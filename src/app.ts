@@ -40,6 +40,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.get('/', (_req, res) => {
   res.json({
     message: "Hello World, i'm alive!",
+    docs: 'http://localhost:3000/api-docs',
+    health: 'http://localhost:3000/health',
   });
 });
 
