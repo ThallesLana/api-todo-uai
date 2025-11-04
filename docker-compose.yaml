@@ -1,30 +1,60 @@
 services:
   mongo:
     image: mongo
-    container_name: mongo-todo-uai
-    restart: always
+    container_name: todo_uai_mongo
+    restart: unless-stopped
     ports:
       - "${MONGO_PORT_INT}:${MONGO_PORT_EXT}"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - mongo-todo-uai-data:/data/db
+      - mongo_todo_uai_data:/data/db
+    networks:
+      - todo_uai_network
 
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express-todo-uai
-    restart: always
+  api:
+    build: .
+    container_name: todo_uai_api
     ports:
-      - 8081:8081
+      - '${PORT}:${PORT}'
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:${MONGO_PORT_INT}/
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
+      - LIMIT_BODY=${LIMIT_BODY}
+      - LIMIT_URL=${LIMIT_URL}
+      - BASE_URL=${BASE_URL}
     depends_on:
       - mongo
+    restart: unless-stopped
+    networks:
+      - todo_uai_network
+  
+  # Just for development
+  # mongo-express:
+  #   image: mongo-express
+  #   container_name: mongo-express-todo-uai
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+  #     ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+  #     ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+  #     ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:${MONGO_PORT_INT}/
+  #   depends_on:
+  #     - mongo
+
+networks:
+  todo_uai_network:
+    driver: bridge
 
 volumes:
-  mongo-todo-uai-data:
+  mongo_todo_uai_data:  
