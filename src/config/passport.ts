@@ -7,7 +7,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: `${process.env.BASE_URL}/api/auth/google/callback`,
     },
     async (_accessToken, _refreshToken, profile, done) => {
       try {
@@ -30,14 +30,18 @@ passport.use(
             picture: profile.photos[0].value,
           });
 
-          console.log('User created successfully:', user.email);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('User created successfully:', user.email);
+          }
           return done(null, user);
         }
 
         user.lastLogin = new Date();
         await user.save();
 
-        console.log('User logged in successfully:', user.email);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('User logged in successfully:', user.email);
+        }
         return done(null, user);
       } catch (error) {
         console.error('Authentication Failed: ', error);

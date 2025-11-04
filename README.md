@@ -63,6 +63,8 @@ A aplicação oferece autenticação via Google OAuth 2.0, garantindo segurança
 - ✅ Validação de dados com Zod
 - ✅ Proteção com Helmet
 - ✅ CORS configurado
+- ✅ Rate limiting
+- ✅ Tratamento centralizado de erros
 
 ---
 
@@ -175,15 +177,57 @@ npm run format
 src/
 ├── config/          # Configurações (database, passport, swagger)
 ├── controllers/     # Controladores das rotas
-├── middlewares/     # Middlewares (auth, validação)
+│   ├── info.controller.ts      # Endpoints de informação e health check
+│   ├── tasklists.controller.ts # Gerenciamento de listas
+│   ├── tasks.controller.ts     # Gerenciamento de tarefas
+│   └── users.controller.ts     # Gerenciamento de usuários
+├── middlewares/     # Middlewares personalizados
+│   ├── auth.middleware.ts      # Autenticação e autorização
+│   ├── error.middleware.ts     # Tratamento centralizado de erros
+│   └── validate.middleware.ts  # Validação de dados
 ├── models/          # Modelos do Mongoose
 ├── routes/          # Definição das rotas
+│   ├── info.route.ts          # Rotas de informação (/, /health)
+│   ├── auth.route.ts          # Rotas de autenticação
+│   ├── tasklists.route.ts     # Rotas de listas
+│   ├── tasks.route.ts         # Rotas de tarefas
+│   └── users.route.ts         # Rotas de usuários
 ├── schemas/         # Schemas de validação (Zod)
 ├── services/        # Lógica de negócio
-├── responses/       # Padronização de respostas
+├── responses/       # Padronização de respostas da API
 ├── app.ts           # Configuração do Express
 └── server.ts        # Inicialização do servidor
 ```
+
+---
+
+## 🏗️ Arquitetura e Boas Práticas
+
+### Melhorias Implementadas
+
+**Separação de Responsabilidades:**
+- ✅ Controllers organizados por domínio (info, users, tasks, tasklists)
+- ✅ Middlewares centralizados para tratamento de erros
+- ✅ Rotas separadas por funcionalidade
+- ✅ Métodos estáticos nos controllers para melhor performance
+
+**Tratamento de Erros:**
+- ✅ Middleware centralizado de tratamento de erros
+- ✅ Tipagem adequada para erros customizados
+- ✅ Respostas padronizadas com stack trace em desenvolvimento
+- ✅ Handler específico para rotas não encontradas (404)
+
+**Qualidade de Código:**
+- ✅ TypeScript com tipagem rigorosa
+- ✅ ESLint configurado com regras de qualidade
+- ✅ Prettier para formatação consistente
+- ✅ Estrutura modular e escalável
+
+**Segurança:**
+- ✅ Rate limiting para prevenir ataques de força bruta
+- ✅ Helmet para headers de segurança
+- ✅ CORS configurado adequadamente
+- ✅ Validação de entrada com Zod
 
 ---
 
@@ -224,6 +268,11 @@ A API utiliza autenticação baseada em sessão com Passport.js e Google OAuth 2
 
 ## 📊 Endpoints Principais
 
+### Informações da API
+- `GET /` - Informações gerais da API
+- `GET /health` - Health check da aplicação
+- `GET /api-docs` - Documentação Swagger interativa
+
 ### Autenticação
 - `GET /api/auth/google` - Iniciar login com Google
 - `GET /api/auth/google/callback` - Callback do Google OAuth
@@ -252,7 +301,10 @@ A API utiliza autenticação baseada em sessão com Passport.js e Google OAuth 2
 ## ⏳ Status do Projeto
 
 - ✅ MVP concluído
-- 🚧 Melhorias em andamento
+- ✅ Refatoração arquitetural implementada
+- ✅ Tratamento de erros centralizado
+- ✅ Estrutura modular e escalável
+- 🚧 Novas funcionalidades em desenvolvimento
 
 ---
 
