@@ -4,7 +4,7 @@ services:
     container_name: todo_uai_mongo
     restart: unless-stopped
     ports:
-      - "${MONGO_PORT_INT}:${MONGO_PORT_EXT}"
+      - "${MONGO_PORT_EXT}:${MONGO_PORT_INT}"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -12,6 +12,13 @@ services:
       - mongo_todo_uai_data:/data/db
     networks:
       - todo_uai_network
+
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s 
 
   api:
     build: .
@@ -31,7 +38,8 @@ services:
       - LIMIT_URL=${LIMIT_URL}
       - BASE_URL=${BASE_URL}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - todo_uai_network
