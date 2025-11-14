@@ -2,9 +2,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-const BASE_URL = process.env.BASE_URL;
-const PORT = process.env.PORT;
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,16 +18,6 @@ const options = {
         email: 'contato@thalles-lana.dev',
       },
     },
-    servers: [
-      {
-        url: `http://localhost:${PORT}`,
-        description: 'Servidor de desenvolvimento',
-      },
-      {
-        url: `${BASE_URL}`,
-        description: 'Servidor de produção',
-      },
-    ],
     components: {
       securitySchemes: {
         bearerAuth: {
