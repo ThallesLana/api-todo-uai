@@ -1,4 +1,12 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import swaggerJsdoc from 'swagger-jsdoc';
+
+const BASE_URL = process.env.BASE_URL;
+const PORT = process.env.PORT;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
@@ -15,8 +23,12 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: `http://localhost:${PORT}`,
         description: 'Servidor de desenvolvimento',
+      },
+      {
+        url: `${BASE_URL}`,
+        description: 'Servidor de produção',
       },
     ],
     components: {
@@ -34,7 +46,7 @@ const options = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'],
+  apis: [path.join(__dirname, '..', 'routes', '**', '*.{ts,js}')],
 };
 
 export const specs = swaggerJsdoc(options);
