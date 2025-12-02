@@ -25,8 +25,8 @@ export class TasksService {
   async create(taskData: ITaskCreate) {
     const task = await this.tasksModel.create(taskData);
     const taskObj = task.toObject();
-    delete taskObj.__v;
-    return taskObj;
+    const { __v, ...taskWithoutV } = taskObj;
+    return taskWithoutV;
   }
 
   async update(id: string, updateData: Partial<ITask>) {
