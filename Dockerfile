@@ -26,6 +26,7 @@ RUN npm ci --omit=dev --frozen-lockfile && npm cache clean --force
 
 # Copiar build e ajustar permissões
 COPY --from=builder --chown=todo_uai_user:nodejs /app/dist ./dist
+COPY --from=builder --chown=todo_uai_user:nodejs /app/swagger.json ./swagger.json
 
 # Configurar variáveis de ambiente
 ENV NODE_ENV=production
