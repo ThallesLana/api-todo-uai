@@ -1,0 +1,1252 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Todo UAI - API",
+    "version": "1.0.0",
+    "description": "É uma API REST de lista de tarefas com aquele jeitinho mineiro: simples, direto e sem enrolação. Permite criar e gerenciar listas personalizadas, organizar tarefas com cores diferentes e marcar o que já foi feito com um clique.",
+    "contact": {
+      "name": "Thalles Lana",
+      "email": "contato@thalles-lana.dev"
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token"
+      }
+    },
+    "schemas": {
+      "Tasklist": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID da lista de tarefas",
+            "example": "507f1f77bcf86cd799439012"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da lista de tarefas",
+            "example": "Compras do mês"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição da lista de tarefas",
+            "example": "Lista de compras para o mês de novembro"
+          },
+          "color": {
+            "type": "string",
+            "enum": [
+              "#87CEEB",
+              "#98FF98",
+              "#f54b4bff",
+              "#FFFACD",
+              "#FFDAB9",
+              "#001F3F",
+              "#228B22",
+              "#800020",
+              "#2F4F4F",
+              "#8E4585"
+            ],
+            "description": "Cor da lista de tarefas",
+            "example": "#87CEEB"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID do usuário proprietário da lista",
+            "example": "507f1f77bcf86cd799439013"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação da lista"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização da lista"
+          }
+        }
+      },
+      "CreateTasklist": {
+        "type": "object",
+        "required": [
+          "name",
+          "userId"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Nome da lista de tarefas",
+            "example": "Compras do mês"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Descrição da lista de tarefas",
+            "example": "Lista de compras para o mês de novembro"
+          },
+          "color": {
+            "type": "string",
+            "enum": [
+              "#87CEEB",
+              "#98FF98",
+              "#f54b4bff",
+              "#FFFACD",
+              "#FFDAB9",
+              "#001F3F",
+              "#228B22",
+              "#800020",
+              "#2F4F4F",
+              "#8E4585"
+            ],
+            "description": "Cor da lista de tarefas",
+            "example": "#87CEEB"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID do usuário proprietário da lista",
+            "example": "507f1f77bcf86cd799439013"
+          }
+        }
+      },
+      "UpdateTasklist": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Nome da lista de tarefas",
+            "example": "Compras do mês - Atualizado"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Descrição da lista de tarefas",
+            "example": "Lista de compras para o mês de novembro - Atualizada"
+          },
+          "color": {
+            "type": "string",
+            "enum": [
+              "#87CEEB",
+              "#98FF98",
+              "#f54b4bff",
+              "#FFFACD",
+              "#FFDAB9",
+              "#001F3F",
+              "#228B22",
+              "#800020",
+              "#2F4F4F",
+              "#8E4585"
+            ],
+            "description": "Cor da lista de tarefas",
+            "example": "#98FF98"
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID da tarefa",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          "title": {
+            "type": "string",
+            "description": "Título da tarefa",
+            "example": "Comprar pão de queijo"
+          },
+          "note": {
+            "type": "string",
+            "description": "Notas adicionais da tarefa",
+            "example": "Comprar no mercado da esquina"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "Status de conclusão da tarefa",
+            "example": false
+          },
+          "tasklistId": {
+            "type": "string",
+            "description": "ID da lista de tarefas à qual a tarefa pertence",
+            "example": "507f1f77bcf86cd799439012"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação da tarefa"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização da tarefa"
+          }
+        }
+      },
+      "CreateTask": {
+        "type": "object",
+        "required": [
+          "title",
+          "tasklistId"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Título da tarefa",
+            "example": "Comprar pão de queijo"
+          },
+          "note": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Notas adicionais da tarefa",
+            "example": "Comprar no mercado da esquina"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "Status de conclusão da tarefa",
+            "example": false
+          },
+          "tasklistId": {
+            "type": "string",
+            "description": "ID da lista de tarefas",
+            "example": "507f1f77bcf86cd799439012"
+          }
+        }
+      },
+      "UpdateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Título da tarefa",
+            "example": "Comprar pão de queijo e café"
+          },
+          "note": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Notas adicionais da tarefa",
+            "example": "Comprar no mercado da esquina"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "Status de conclusão da tarefa",
+            "example": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID do usuário",
+            "example": "507f1f77bcf86cd799439013"
+          },
+          "googleId": {
+            "type": "string",
+            "description": "ID do Google do usuário",
+            "example": 1234567890
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do usuário",
+            "example": "usuario@example.com"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário",
+            "example": "João da Silva"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ],
+            "description": "Função do usuário no sistema",
+            "example": "user"
+          },
+          "picture": {
+            "type": "string",
+            "description": "URL da foto de perfil do usuário",
+            "example": "https://example.com/photo.jpg"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação do usuário"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data do último login do usuário"
+          }
+        }
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Nome do usuário",
+            "example": "João da Silva Atualizado"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "cookieAuth": []
+    }
+  ],
+  "paths": {
+    "/api/auth": {
+      "get": {
+        "summary": "Verifica o status do serviço de autenticação",
+        "description": "Retorna o status do serviço de autenticação",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Serviço de autenticação online",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "service": {
+                      "type": "string",
+                      "example": "Auth"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "online"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "summary": "Inicia o fluxo de autenticação com Google",
+        "description": "Redireciona o usuário para a página de login do Google",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirecionamento para a página de login do Google"
+          }
+        }
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "summary": "Callback da autenticação com Google",
+        "description": "Endpoint de callback após a autenticação com Google. Redireciona para a página de boas-vindas em caso de sucesso ou para a página de erro em caso de falha",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Código de autorização do Google"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Estado da requisição"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirecionamento para a página de boas-vindas ou de erro"
+          }
+        }
+      }
+    },
+    "/api/auth/login-failure": {
+      "get": {
+        "summary": "Página de erro de autenticação",
+        "description": "Retorna uma mensagem de erro quando a autenticação falha",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "401": {
+            "description": "Erro na autenticação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Sorry, but there was an error during authentication. Please try again."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Realiza o logout do usuário",
+        "description": "Encerra a sessão do usuário autenticado removendo os cookies de autenticação",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logout successful"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao realizar logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Sorry, but there was an error during logout"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Registra usuário com email e senha",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "João da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "example": "minhaSenhaSegura"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado e autenticado (cookies setados)"
+          },
+          "409": {
+            "description": "Email já está em uso"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login com email e senha",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "minhaSenhaSegura"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autenticado com sucesso (cookies setados)"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "summary": "Renova o access token",
+        "description": "Usa o refresh token (cookie httpOnly) para gerar um novo access token",
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Access token renovado"
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Retorna o usuário autenticado",
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados do usuário"
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/api/tasklist/{userId}": {
+      "get": {
+        "summary": "Retorna todas as listas de tarefas de um usuário",
+        "description": "Busca todas as listas de tarefas pertencentes a um usuário específico",
+        "tags": [
+          "Tasklists"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do usuário",
+            "example": "507f1f77bcf86cd799439013"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listas de tarefas retornadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tasklist"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/api/tasklist": {
+      "post": {
+        "summary": "Cria uma nova lista de tarefas",
+        "description": "Cria uma nova lista de tarefas para um usuário",
+        "tags": [
+          "Tasklists"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTasklist"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Lista de tarefas criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tasklist"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/api/tasklist/{id}": {
+      "patch": {
+        "summary": "Atualiza uma lista de tarefas",
+        "description": "Atualiza os dados de uma lista de tarefas existente",
+        "tags": [
+          "Tasklists"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID da lista de tarefas",
+            "example": "507f1f77bcf86cd799439012"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTasklist"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista de tarefas atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tasklist"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Lista de tarefas não encontrada"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma lista de tarefas",
+        "description": "Remove uma lista de tarefas do sistema",
+        "tags": [
+          "Tasklists"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID da lista de tarefas",
+            "example": "507f1f77bcf86cd799439012"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tarefas deletada com sucesso"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Lista de tarefas não encontrada"
+          }
+        }
+      }
+    },
+    "/api/tasks/{tasklistId}": {
+      "get": {
+        "summary": "Retorna todas as tarefas de uma lista",
+        "description": "Busca todas as tarefas pertencentes a uma lista específica",
+        "tags": [
+          "Tasks"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tasklistId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID da lista de tarefas",
+            "example": "507f1f77bcf86cd799439012"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tarefas retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Lista de tarefas não encontrada"
+          }
+        }
+      }
+    },
+    "/api/tasks": {
+      "post": {
+        "summary": "Cria uma nova tarefa",
+        "description": "Cria uma nova tarefa em uma lista específica",
+        "tags": [
+          "Tasks"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tarefa criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "patch": {
+        "summary": "Atualiza uma tarefa",
+        "description": "Atualiza os dados de uma tarefa existente",
+        "tags": [
+          "Tasks"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID da tarefa",
+            "example": "507f1f77bcf86cd799439011"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTask"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tarefa atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Tarefa não encontrada"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma tarefa",
+        "description": "Remove uma tarefa do sistema",
+        "tags": [
+          "Tasks"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID da tarefa",
+            "example": "507f1f77bcf86cd799439011"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tarefa deletada com sucesso"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Tarefa não encontrada"
+          }
+        }
+      }
+    },
+    "/api/users/hello-new-user": {
+      "get": {
+        "summary": "Mensagem de boas-vindas para novo usuário",
+        "description": "Retorna uma mensagem de boas-vindas e os dados do usuário autenticado",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mensagem de boas-vindas retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Hello new user"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "summary": "Retorna todos os usuários (Admin)",
+        "description": "Busca todos os usuários do sistema. Requer permissão de administrador",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "403": {
+            "description": "Sem permissão (requer admin)"
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria um novo usuário (Admin)",
+        "description": "Cria um novo usuário com email/senha (senha opcional). Requer permissão de administrador",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "João da Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "joao@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "example": "minhaSenhaSegura"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "user",
+                      "admin"
+                    ],
+                    "example": "user"
+                  },
+                  "googleId": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "picture": {
+                    "type": "string",
+                    "example": "https://example.com/photo.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "403": {
+            "description": "Sem permissão (requer admin)"
+          },
+          "409": {
+            "description": "Email já está em uso"
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "summary": "Retorna um usuário específico",
+        "description": "Busca os dados de um usuário pelo ID",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do usuário",
+            "example": "507f1f77bcf86cd799439013"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário retornado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Atualiza um usuário",
+        "description": "Atualiza os dados de um usuário existente",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do usuário",
+            "example": "507f1f77bcf86cd799439013"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um usuário",
+        "description": "Remove um usuário do sistema",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do usuário",
+            "example": "507f1f77bcf86cd799439013"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário deletado com sucesso"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Endpoints de autenticação"
+    },
+    {
+      "name": "Users",
+      "description": "Endpoints de gerenciamento de usuários"
+    },
+    {
+      "name": "Tasklists",
+      "description": "Endpoints de gerenciamento de listas de tarefas"
+    },
+    {
+      "name": "Tasks",
+      "description": "Endpoints de gerenciamento de tarefas"
+    }
+  ]
+}

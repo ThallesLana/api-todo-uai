@@ -8,7 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build:swagger": "node swagger.generate.js",
-    "build": "npm run build:swagger && tsup",
+    "build": "tsup && npm run build:swagger",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
