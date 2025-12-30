@@ -14,11 +14,11 @@ export class InfoController {
 
   static info = (_req: Request, res: Response) => {
     apiResponse.success(res, {
-      message: "Hello World, i'm alive!",
+      message: 'Hello World, another task manager is alive!',
       docs: `${process.env.BASE_URL}/api-docs`,
       health: `${process.env.BASE_URL}/health`,
       author: 'Thalles Lana',
-      repository: 'https://github.com/ThallesLana/todo-uai',
+      repository: 'https://github.com/ThallesLana/api-todo-uai',
     });
   };
 }
