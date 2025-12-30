@@ -1,5 +1,5 @@
 {
-  "name": "todo-uai",
+  "name": "api-todo-uai",
   "version": "1.0.0",
   "type": "module",
   "description": "API para gerenciamento de tarefas",
