@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://img.icons8.com/fluency/96/000000/todo-list.png" width="120" alt="Todo UAI Logo" />
+  <img src="https://app.todo-uai.thalles-lana.dev/assets/todo_uai.svg" width="120" alt="Todo UAI Logo" />
 </p>
 
 # ✅ Todo UAI - API de Gerenciamento de Tarefas
 
 **Todo UAI** é uma API REST de lista de tarefas com aquele jeitinho mineiro: simples, direto e sem enrolação. Desenvolvida com **Express**, **TypeScript** e **MongoDB**, permite criar e gerenciar listas personalizadas, organizar tarefas com cores diferentes e marcar o que já foi feito com um clique.
 
-A aplicação oferece autenticação via Google OAuth 2.0, garantindo segurança e praticidade no acesso.
+A aplicação oferece autenticação via Google OAuth 2.0 e também autenticação local (email/senha), utilizando **JWT em cookies HTTP-only**.
 
 ---
 
@@ -34,7 +34,7 @@ A aplicação oferece autenticação via Google OAuth 2.0, garantindo segurança
 
 ### Autenticação
 - ✅ Login com Google OAuth 2.0
-- ✅ Gerenciamento de sessões
+- ✅ Autenticação com JWT via cookies (access/refresh)
 - ✅ Logout seguro
 
 ### Usuários
@@ -117,15 +117,16 @@ cp .env.example .env
 - `MONGODB_URI` - URI de conexão com o MongoDB
 - `GOOGLE_CLIENT_ID` - Client ID do Google OAuth
 - `GOOGLE_CLIENT_SECRET` - Client Secret do Google OAuth
-- `SESSION_SECRET` - Chave secreta para sessões
+- `JWT_ACCESS_SECRET` - Chave para assinar o access token
+- `JWT_REFRESH_SECRET` - Chave para assinar o refresh token
 - `PORT` - Porta da aplicação (padrão: 3000)
 
 **Como obter credenciais do Google OAuth:**
 1. Acesse o [Google Cloud Console](https://console.cloud.google.com/)
 2. Crie um novo projeto ou selecione um existente
-3. Ative a API do Google+ 
+3. Configure a tela de consentimento OAuth (OAuth consent screen)
 4. Crie credenciais OAuth 2.0
-5. Configure as URLs de redirecionamento:
+5. Configure as URLs de redirecionamento autorizadas:
    - `http://localhost:3000/api/auth/google/callback`
 
 ### 4. **Configure o banco de dados (MongoDB via Docker):**
@@ -253,14 +254,14 @@ As listas de tarefas podem ser personalizadas com as seguintes cores:
 
 ## 🔒 Autenticação
 
-A API utiliza autenticação baseada em sessão com Passport.js e Google OAuth 2.0.
+A API utiliza autenticação baseada em **JWT via cookies HTTP-only**. O login pode ser feito via Google OAuth 2.0 ou via login local (email/senha).
 
 **Fluxo de autenticação:**
 1. Usuário acessa `/api/auth/google`
 2. É redirecionado para o login do Google
 3. Após autorização, retorna para `/api/auth/google/callback`
-4. Sessão é criada e usuário está autenticado
-5. Cookie de sessão é armazenado no navegador
+4. Tokens (access/refresh) são emitidos e armazenados em cookies
+5. Requisições subsequentes usam automaticamente os cookies
 
 **Rotas protegidas** requerem autenticação via middleware `isAuthenticated`.
 
@@ -274,12 +275,19 @@ A API utiliza autenticação baseada em sessão com Passport.js e Google OAuth 2
 - `GET /api-docs` - Documentação Swagger interativa
 
 ### Autenticação
+- `GET /api/auth` - Status do serviço de autenticação
 - `GET /api/auth/google` - Iniciar login com Google
 - `GET /api/auth/google/callback` - Callback do Google OAuth
-- `GET /api/auth/logout` - Realizar logout
+- `GET /api/auth/login-failure` - Erro de autenticação (fallback)
+- `POST /api/auth/register` - Cadastro local (email/senha)
+- `POST /api/auth/login` - Login local (email/senha)
+- `POST /api/auth/refresh` - Renovar access token via refresh token
+- `POST /api/auth/logout` - Realizar logout
+- `GET /api/auth/me` - Retorna o usuário autenticado
 
 ### Usuários
 - `GET /api/users` - Listar todos os usuários (Admin)
+- `POST /api/users` - Criar usuário (Admin)
 - `GET /api/users/:id` - Buscar usuário por ID
 - `PATCH /api/users/:id` - Atualizar usuário
 - `DELETE /api/users/:id` - Deletar usuário
