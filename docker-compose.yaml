@@ -20,29 +20,29 @@ services:
       retries: 5
       start_period: 30s 
 
-  # api:
-  #   build: .
-  #   container_name: todo_uai_api
-  #   ports:
-  #     - '${PORT}:${PORT}'
-  #   environment:
-  #     - NODE_ENV=${NODE_ENV}
-  #     - PORT=${PORT}
-  #     - MONGODB_URI=${MONGODB_URI}
-  #     - SESSION_SECRET=${SESSION_SECRET}
-  #     - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-  #     - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-  #     - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS}
-  #     - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
-  #     - LIMIT_BODY=${LIMIT_BODY}
-  #     - LIMIT_URL=${LIMIT_URL}
-  #     - BASE_URL=${BASE_URL}
-  #   depends_on:
-  #     mongo:
-  #       condition: service_healthy
-  #   restart: unless-stopped
-  #   networks:
-  #     - todo_uai_network
+  api:
+    build: .
+    container_name: todo_uai_api
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
+      - LIMIT_BODY=${LIMIT_BODY}
+      - LIMIT_URL=${LIMIT_URL}
+      - BASE_URL=${BASE_URL}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - todo_uai_network
   
   # Just for development
   # mongo-express:
