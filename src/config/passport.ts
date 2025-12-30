@@ -1,4 +1,4 @@
-import User, { IUser } from '@/models/user.js';
+import User from '@/models/user.js';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
@@ -50,20 +50,5 @@ passport.use(
     },
   ),
 );
-
-passport.serializeUser((user, done) => {
-  const userId = (user as IUser)._id.toString();
-
-  done(null, userId);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
-});
 
 export default passport;

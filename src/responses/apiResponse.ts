@@ -24,7 +24,7 @@ export const HttpStatus = {
 } as const;
 
 export const apiResponse = {
-  success: <T>(res: Response, data: T, message?: string, statusCode = HttpStatus.OK) => {
+  success: <T>(res: Response, data: T, message?: string, statusCode: number = HttpStatus.OK) => {
     return res.status(statusCode).json({
       success: true,
       statusCode: statusCode,
@@ -36,7 +36,7 @@ export const apiResponse = {
   error: (
     res: Response,
     message: string,
-    statusCode = HttpStatus.BAD_REQUEST,
+    statusCode: number = HttpStatus.BAD_REQUEST,
     errors?: unknown[],
   ) => {
     return res.status(statusCode).json({

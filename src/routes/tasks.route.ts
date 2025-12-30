@@ -129,7 +129,7 @@ export default router;
  *     description: Busca todas as tarefas pertencentes a uma lista específica
  *     tags: [Tasks]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: tasklistId
@@ -161,7 +161,7 @@ export default router;
  *     description: Cria uma nova tarefa em uma lista específica
  *     tags: [Tasks]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -189,7 +189,7 @@ export default router;
  *     description: Atualiza os dados de uma tarefa existente
  *     tags: [Tasks]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -222,7 +222,7 @@ export default router;
  *     description: Remove uma tarefa do sistema
  *     tags: [Tasks]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id

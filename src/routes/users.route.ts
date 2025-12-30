@@ -1,20 +1,21 @@
 import { UsersController } from '@/controllers/users.controller.js';
 import { isAdmin, isAuthenticated } from '@/middlewares/auth.middleware.js';
 import { validate } from '@/middlewares/validate.middleware.js';
-import { updateUserSchema, userIdSchema } from '@/schemas/users.schema.js';
+import { createUserSchema, updateUserSchema, userIdSchema } from '@/schemas/users.schema.js';
 import { Router } from 'express';
 
 const router = Router();
 const usersController = new UsersController();
 
-router.get('/hello-new-user', isAuthenticated, (req, res) => {
-  res.status(200).json({
-    message: 'Hello new user',
-    user: req.user,
-  });
-});
-
 router.get('/', isAdmin, usersController.getAll.bind(usersController));
+
+router.post(
+  '/',
+  isAdmin,
+  validate(createUserSchema, 'body'),
+  usersController.create.bind(usersController),
+);
+
 router.get(
   '/:id',
   isAuthenticated,
@@ -96,7 +97,7 @@ export default router;
  *     description: Retorna uma mensagem de boas-vindas e os dados do usuário autenticado
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Mensagem de boas-vindas retornada com sucesso
@@ -122,7 +123,7 @@ export default router;
  *     description: Busca todos os usuários do sistema. Requer permissão de administrador
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: Lista de usuários retornada com sucesso
@@ -146,7 +147,7 @@ export default router;
  *     description: Busca os dados de um usuário pelo ID
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -171,7 +172,7 @@ export default router;
  *     description: Atualiza os dados de um usuário existente
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -204,7 +205,7 @@ export default router;
  *     description: Remove um usuário do sistema
  *     tags: [Users]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -220,4 +221,56 @@ export default router;
  *         description: Não autenticado
  *       404:
  *         description: Usuário não encontrado
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Cria um novo usuário (Admin)
+ *     description: Cria um novo usuário com email/senha (senha opcional). Requer permissão de administrador
+ *     tags: [Users]
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 minLength: 3
+ *                 example: João da Silva
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: joao@example.com
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: "minhaSenhaSegura"
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *                 example: user
+ *               googleId:
+ *                 type: string
+ *                 example: "1234567890"
+ *               picture:
+ *                 type: string
+ *                 example: "https://example.com/photo.jpg"
+ *     responses:
+ *       201:
+ *         description: Usuário criado com sucesso
+ *       409:
+ *         description: Email já está em uso
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão (requer admin)
  */

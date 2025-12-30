@@ -3,8 +3,6 @@ import helmet from 'helmet';
 import cors from 'cors';
 import userRoutes from '@/routes/users.route.js';
 import authRoutes from '@/routes/auth.route.js';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import passport from '@/config/passport.js';
 import tasklistsRoutes from '@/routes/tasklists.route.js';
 import tasksRoutes from '@/routes/tasks.route.js';
@@ -14,11 +12,34 @@ import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware.js';
 import infoRoutes from '@/routes/info.route.js';
+import cookieParser from 'cookie-parser';
 
 const app: Application = express();
-const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'production' ? process.env.ALLOWED_ORIGINS?.split(',') || [] : '*',
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (origin === 'http://localhost:5173') {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -39,28 +60,8 @@ app.use(limiter);
 app.use(express.json({ limit: process.env.LIMIT_BODY }));
 app.use(express.urlencoded({ extended: true, limit: process.env.LIMIT_URL }));
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI!,
-      touchAfter: 24 * 3600,
-      ttl: 24 * 60 * 60,
-      autoRemove: 'native',
-    }),
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-    },
-  }),
-);
-
+app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 

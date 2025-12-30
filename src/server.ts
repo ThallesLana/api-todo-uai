@@ -15,8 +15,8 @@ async function startServer() {
       throw new Error('Missing Google OAuth credentials in .env');
     }
 
-    if (!process.env.SESSION_SECRET) {
-      throw new Error('Missing SESSION_SECRET in .env');
+    if (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET) {
+      throw new Error('Missing JWT secrets in .env');
     }
 
     await connectDB();

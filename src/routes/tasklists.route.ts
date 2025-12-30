@@ -132,7 +132,7 @@ export default route;
  *     description: Busca todas as listas de tarefas pertencentes a um usuário específico
  *     tags: [Tasklists]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -164,7 +164,7 @@ export default route;
  *     description: Cria uma nova lista de tarefas para um usuário
  *     tags: [Tasklists]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -192,7 +192,7 @@ export default route;
  *     description: Atualiza os dados de uma lista de tarefas existente
  *     tags: [Tasklists]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -225,7 +225,7 @@ export default route;
  *     description: Remove uma lista de tarefas do sistema
  *     tags: [Tasklists]
  *     security:
- *       - bearerAuth: []
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: id

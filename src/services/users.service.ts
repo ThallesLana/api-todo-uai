@@ -12,6 +12,11 @@ export class UsersService {
     return await this.userModel.find().select('-__v');
   }
 
+  async create(createData: Partial<IUser>) {
+    const user = await this.userModel.create(createData);
+    return await this.userModel.findById(user._id).select('-__v -passwordHash');
+  }
+
   async getOne(id: string) {
     const user = await this.userModel.findById(id).select('-__v');
 

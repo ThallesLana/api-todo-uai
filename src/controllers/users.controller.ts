@@ -1,12 +1,48 @@
 import { apiResponse } from '@/responses/apiResponse.js';
 import { UsersService } from '@/services/users.service.js';
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import User from '@/models/user.js';
 
 export class UsersController {
   private usersService: UsersService;
 
   constructor() {
     this.usersService = new UsersService();
+  }
+
+  async create(req: Request, res: Response) {
+    try {
+      const { name, email, password, role, googleId, picture } = req.body as {
+        name: string;
+        email: string;
+        password?: string;
+        role?: 'user' | 'admin';
+        googleId?: string;
+        picture?: string;
+      };
+
+      const existing = await User.findOne({ email }).select('_id');
+      if (existing) {
+        return apiResponse.error(res, 'Email already in use', 409);
+      }
+
+      const passwordHash = password ? await bcrypt.hash(password, 12) : undefined;
+
+      const created = await this.usersService.create({
+        name,
+        email,
+        role: role || 'user',
+        ...(googleId ? { googleId } : {}),
+        ...(picture ? { picture } : {}),
+        ...(passwordHash ? { passwordHash } : {}),
+        lastLogin: new Date(),
+      });
+
+      return apiResponse.success(res, created, 'User created successfully', 201);
+    } catch (err) {
+      return apiResponse.error(res, 'Error on create user: ' + err);
+    }
   }
 
   async getAll(_req: Request, res: Response) {
