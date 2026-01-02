@@ -26,16 +26,16 @@ const corsOptions: cors.CorsOptions = {
       return callback(null, true);
     }
 
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
     if (process.env.NODE_ENV !== 'production') {
       if (origin === 'http://localhost:5173') {
         return callback(null, true);
       }
 
       return callback(new Error(`CORS blocked for origin: ${origin}`));
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
     }
 
     return callback(new Error(`CORS blocked for origin: ${origin}`));
@@ -46,6 +46,7 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(helmet());
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(compression());
 
 const limiter = rateLimit({
