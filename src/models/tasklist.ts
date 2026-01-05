@@ -1,17 +1,17 @@
 import mongoose, { Document, Types } from 'mongoose';
 
 export enum ListColor {
-  blue_light = '#87CEEB',
-  green_light = '#98FF98',
-  red_light = '#f54b4bff',
-  yellow = '#FFFACD',
-  orange = '#FFDAB9',
+  BLUE_LIGHT = 'blue_light',
+  GREEN_LIGHT = 'green_light',
+  RED_LIGHT = 'red_light',
+  YELLOW = 'yellow',
+  ORANGE = 'orange',
 
-  blue_dark = '#001F3F',
-  green_dark = '#228B22',
-  red_dark = '#800020',
-  gray = '#2F4F4F',
-  purple = '#8E4585',
+  BLUE_DARK = 'blue_dark',
+  GREEN_DARK = 'green_dark',
+  RED_DARK = 'red_dark',
+  GRAY = 'gray',
+  PURPLE = 'purple',
 }
 
 export interface ITasklist extends Document {
