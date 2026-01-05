@@ -39,6 +39,7 @@ services:
       - LIMIT_BODY=${LIMIT_BODY}
       - LIMIT_URL=${LIMIT_URL}
       - BASE_URL=${BASE_URL}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
       - AUTH_SUCCESS_REDIRECT_URL=${AUTH_SUCCESS_REDIRECT_URL}
     depends_on:
       mongo:
