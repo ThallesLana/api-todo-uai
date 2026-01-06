@@ -9,11 +9,79 @@ export class TasklistService {
   }
 
   async getAll(userId: string) {
-    return await this.tasklistModel.find({ userId: userId }).select('-__v');
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new Error('Invalid userId');
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    return await this.tasklistModel.aggregate([
+      {
+        $match: {
+          userId: userObjectId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'tasks',
+          localField: '_id',
+          foreignField: 'tasklistId',
+          as: 'tasks',
+        },
+      },
+      {
+        $addFields: {
+          tasksCount: {
+            $size: '$tasks',
+          },
+        },
+      },
+      {
+        $project: {
+          __v: 0,
+          tasks: 0,
+        },
+      },
+    ]);
   }
 
   async getOne(id: string) {
-    const tasklist = await this.tasklistModel.findById(id).select('-__v');
+    if (!mongoose.isValidObjectId(id)) {
+      throw new Error('Invalid tasklist id');
+    }
+
+    const objectId = new mongoose.Types.ObjectId(id);
+
+    const result = await this.tasklistModel.aggregate([
+      {
+        $match: {
+          _id: objectId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'tasks',
+          localField: '_id',
+          foreignField: 'tasklistId',
+          as: 'tasks',
+        },
+      },
+      {
+        $addFields: {
+          tasksCount: {
+            $size: '$tasks',
+          },
+        },
+      },
+      {
+        $project: {
+          __v: 0,
+          tasks: 0,
+        },
+      },
+    ]);
+
+    const tasklist = result[0];
 
     if (!tasklist) {
       throw new Error('Tasklist not found');
